@@ -3,10 +3,16 @@ import numpy as np
 def getColumn(matr,i):
     return [row[i] for row in matr]
 
+def matrixPrinter(matr):
+    for i in range(len(matr)):
+        for j in range(len(matr[i])):
+            print(matr[i][j], end=" ")
+        print(end='\n')
+    print('\n')
 
 def rotateBy90(matr):
     newMatrice = []
-    horizontalSize = np.shape(matr)[1]
+    horizontalSize = np.shape(matr)[1]  #?prende la lunghezza in orizontale
     for i in range(horizontalSize):
         column = getColumn(matr, i)
         #? lo mette al contrario https://stackoverflow.com/questions/6771428/most-efficient-way-to-reverse-a-numpy-array
@@ -62,11 +68,11 @@ def patternCleaner(matrice):
     prePatternFound = False
 
     """
-    shape returna la dimesnione del vettore n dimensinato
+    shape returna la dimesnione del vettore n 
     sottforma di array di dimensioni in cui
-    - la prima posizione è uguale all adimensine in altezza della matrice
+    - la prima posizione è uguale alla dimensine in altezza della matrice
     (la dimensione dell'array contenitore)
-    - in seconda posizione inddica la dimensnine degli array contenuti
+    - in seconda posizione indica la dimensione degli array contenuti
     all'interno
     """
 
@@ -100,20 +106,20 @@ def deleteRow(matr, obj):
 
 
 matrTest1 = ([
-    [0,0,1,0],
-    [0,0,1,1],
+    [1,0,1,0],
     [0,0,0,0],
+    [0,1,0,0],
 ])
 horizontalClean = patternCleaner(matrTest1)
 verticalClean = verticalCleaner(horizontalClean)
 
-print(verticalClean)
+matrixPrinter(verticalClean)
 rotated = rotateBy90(verticalClean)
-print(rotated)
+matrixPrinter(rotated)
 rotated = rotateBy90(rotated)
-print(rotated)
+matrixPrinter(rotated)
 rotated = rotateBy90(rotated)
-print(rotated)
+matrixPrinter(rotated)
 
 
 #patternCleaner(matrTest1)
