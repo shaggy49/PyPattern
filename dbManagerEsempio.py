@@ -30,11 +30,13 @@ def insert():
     c = conn.cursor()
 
     # Create table
-    c.execute('''CREATE TABLE  if not exists pattern
+    #SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}';
+
+    c.execute('''CREATE TABLE if not exists pattern
                  (name TEXT, tag TEXT, x INTEGER, y INTEGER, matrix text)''')
 
     # Insert a row of data
-    c.execute("INSERT INTO pattern VALUES ('A','alphabet',4,3,'010101111101')")
+    c.execute("INSERT INTO pattern VALUES ('A','alphabet',4,3,'010101111101'")
     # c.execute("INSERT INTO pattern VALUES ('2006-01-05','BUY','RHAT',100,35.14)")
     
     """
@@ -64,14 +66,56 @@ def clear():
     conn.commit()
     conn.close()
 
-def search_pattern(rotations,tag):
+
+def search():
     conn = sqlite3.connect(DBNAME)
+
     conn.row_factory = sqlite3.Row  
 
     c = conn.cursor()
-    #TODO gestione eccezioni
-    for row in c.execute("SELECT * FROM pattern WHERE tag = '%s'" % tag):
-        print(row["name"])
+#    t = ('RHAT',)
+#    c.execute('SELECT * FROM stocks WHERE symbol=?', t)
+#    print c.fetchone()
+#    '''
+#    for row in c.execute('SELECT * FROM stocks ORDER BY price'):
+#        print row['symbol']
+#    print '\n'
+#'''
+#    c = conn.cursor()
+#    t = ('RHAT',)
+#    c.execute('SELECT * FROM stocks WHERE symbol=?', t)
+#    print c.fetchone()
+    for row in c.execute('SELECT * FROM pattern ORDER BY price'):
+        print (row)
+        #for ind in range(0,len(row)):
+        #    print row[ind],
+        print (row['trans'])
+        print ('\n')
+    print ('\n')
+
+    for row in convert(c.execute('SELECT * FROM stocks ORDER BY price')):
+        print (row.date, row.trans)
+    print ('\n')
+
+    for row in convertStr(c.execute('SELECT * FROM stocks ORDER BY price'),('date','trans')):
+        print (row.date, row.trans)
+    print ('\n')
+
+    for row in convertDict(c.execute('SELECT * FROM stocks ORDER BY price'),{0: 'date',1:'trans'}):
+        print (row['date'], row['trans'])
+    print ('\n')
+
+    for row in c.execute('SELECT * FROM stocks ORDER BY price'):
+        date,trans,v3,v4,v5 = row
+        print (date, ' ', trans)
+    print ('\n')
+
+    for date,trans,v3,v4,v5 in c.execute('SELECT * FROM stocks ORDER BY price'):
+        print (date, ' ', trans)
+    print ('\n')
+
+    day = datetime.datetime.strptime(date, '%Y-%m-%d')
+    print ('che giorno? ',day)
     conn.close()
 
 class riga():
@@ -108,10 +152,9 @@ def convertDict(rs, attrs):
         yield ret
 
 
-"""
+
 if True:
-    insert()
-    #search()
+    #insert()
+    search()
 else:
     clear()
-"""

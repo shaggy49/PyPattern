@@ -1,5 +1,5 @@
 import numpy as np
-
+import dbManager as dbm
 
 def get_column(matr, i):
     return [row[i] for row in matr]
@@ -13,7 +13,7 @@ def matrix_printer(matr):
     print("\n")
 
 
-def roatete_by_90(matr):
+def rotate_by_90(matr):
     new_matrix = []
     horizontal_size = np.shape(matr)[1]  # ?prende la lunghezza in orizontale
     for i in range(horizontal_size):
@@ -62,7 +62,7 @@ def vertical_cleaner(matrice):
     return new_matrix
 
 
-def pattern_cleaner(matrice):
+def horizontal_cleaner(matrice):
     new_matrix = matrice
     # array righe da eliminare prima e dopo aver trovato un pattern
     rows_to_be_deleted_before = []
@@ -110,26 +110,63 @@ def delete_row(matr, obj):
     print(matr)
 
 
+def serialize_matrix(matr):
+    serialized = ''
+    for row in matr:
+        for element in row:
+            serialized = serialized+str(element)
+    return serialized
+
+def generate_rotations_short(matr):
+    return [rotate_by_90(matr) for i in range(4)]
+
+# def generate_rotations(matr):
+#     rotations = []
+#     for i in range (4):
+#         rotations.append(rotate_by_90(matr)) #90
+#     return rotations
+
+    
+# def generate_or_list(matr):
+#     return [serialize_matrix(matr = rotate_by_90(matr)) for i in range(4)]
+def generate_serialized_list(matr):
+    mat = matr
+    serialized_array = []
+    for i in range(4):
+        mat = rotate_by_90(mat)
+        serialized_array.append(serialize_matrix(mat))
+    return serialized_array
+
 matr_test1 = [
-    [1, 1, 1, 1, 0],
-    [1, 0, 0, 1, 0],
-    [1, 1, 1, 1, 0],
-    [1, 0, 0, 1, 0],
+    [0, 1, 0, 0, 0],
+    [1, 0, 1, 0, 0],
+    [1, 1, 1, 0, 0],
+    [1, 0, 1, 0, 0],
 ]
-horizontalClean = pattern_cleaner(matr_test1)
+horizontalClean = horizontal_cleaner(matr_test1)
 vertical_clean = vertical_cleaner(horizontalClean)
 
 print("Cleared matrix:")
 matrix_printer(vertical_clean)
-rotated = roatete_by_90(vertical_clean)
 print("90-degrees matrix:")
+rotated = rotate_by_90(vertical_clean)
 matrix_printer(rotated)
-rotated = roatete_by_90(rotated)
+rotated = rotate_by_90(rotated)
 print("180-degrees  matrix:")
 matrix_printer(rotated)
-rotated = roatete_by_90(rotated)
+rotated = rotate_by_90(rotated)
 print("270-degrees matrix:")
 matrix_printer(rotated)
 
-
-# pattern_cleaner(matr_test1)
+print(generate_serialized_list(vertical_clean))
+#dbm.search_pattern(serialize_matrix(vertical_clean),'alphabet')
+#dbm.search_pattern(serialize_matrix(rotated))
+#dbm.search_pattern(generate_serialized_list(vertical_clean), 'alphabet')
+dbm.clear()
+"""
+1 1 1 1 
+1 0 0 1
+1 1 1 1
+1 0 0 1
+"""
+# horizontal_cleaner(matr_test1)
