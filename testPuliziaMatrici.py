@@ -158,11 +158,16 @@ rotated = rotate_by_90(rotated)
 print("270-degrees matrix:")
 matrix_printer(rotated)
 
+#np.shape(matr)[0] ->y
+
 print(generate_serialized_list(vertical_clean))
 #dbm.search_pattern(serialize_matrix(vertical_clean),'alphabet')
 #dbm.search_pattern(serialize_matrix(rotated))
 #dbm.search_pattern(generate_serialized_list(vertical_clean), 'alphabet')
-dbm.clear()
+dbm.init()
+
+dbm.insert('a','alphabet',serialize_matrix(vertical_clean))
+
 """
 1 1 1 1 
 1 0 0 1
