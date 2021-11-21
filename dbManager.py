@@ -72,7 +72,7 @@ def clear():
     conn.close()
 
 #valutare se spostare in un altro file
-def orGenerator(rotations):
+def or_generator(rotations):
     or_string = ''
     for i in range(len(rotations)):
         or_string += "matrix = '" + rotations[i] + "'"
@@ -85,7 +85,7 @@ def search_pattern(rotations,tag):
     conn = sqlite3.connect(DBNAME)
     conn.row_factory = sqlite3.Row
     patternFound = None
-    orList = orGenerator(rotations)
+    orList = or_generator(rotations)
 
     c = conn.cursor()
     #TODO gestione eccezioni
