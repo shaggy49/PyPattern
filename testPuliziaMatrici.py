@@ -117,8 +117,8 @@ def serialize_matrix(matr):
             serialized = serialized+str(element)
     return serialized
 
-def generate_rotations_short(matr):
-    return [rotate_by_90(matr) for i in range(4)]
+"""def generate_rotations_short(matr):
+    return [rotate_by_90(matr) for i in range(4)]"""
 
 # def generate_rotations(matr):
 #     rotations = []
@@ -165,8 +165,12 @@ print(generate_serialized_list(vertical_clean))
 #dbm.search_pattern(serialize_matrix(rotated))
 #dbm.search_pattern(generate_serialized_list(vertical_clean), 'alphabet')
 dbm.init()
-
-dbm.insert('a','alphabet',serialize_matrix(vertical_clean))
+dbm.insert(
+    'a',
+    'alphabet',
+    serialize_matrix(vertical_clean),
+    generate_serialized_list(vertical_clean)
+    )
 
 """
 1 1 1 1 

@@ -39,16 +39,25 @@ def init():
     # Just be sure any changes have been committed or they will be lost.
     #conn.close()
 
-def insert(name, tag, pattern):
+def insert(name, tag, pattern, rotations):
+
+    """[Insertion function]
+    ### Returns:
+        Integer -- 0 inserimento effettuato con successo, 1 matrice già presente
+    """
+
+    risultato = 0
     conn = create_connection()
     c = conn.cursor()
-
     # Insert a row of data
-    c.execute("INSERT INTO pattern VALUES (?,?,?)", (name,tag,pattern))
-    # c.execute("INSERT INTO pattern VALUES ('2006-01-05','BUY','RHAT',100,35.14)")
-
-    # Save (commit) the changes
-    conn.commit()
+    if(not search_pattern(rotations,tag)):
+        c.execute("INSERT INTO pattern VALUES (?,?,?)", (name,tag,pattern))
+        risultato = 1
+        print("Insert success")
+        conn.commit()
+    conn.close()
+    print(risultato)
+    return risultato
 
 def clear():
 
@@ -62,15 +71,30 @@ def clear():
     conn.commit()
     conn.close()
 
+#valutare se spostare in un altro file
+def orGenerator(rotations):
+    or_string = ''
+    for i in range(len(rotations)):
+        or_string += "matrix = '" + rotations[i] + "'"
+        #mette gli or fino al penultimo elemento/ciclo
+        if(i<len(rotations)-1):
+            or_string += " OR "
+    return or_string
+
 def search_pattern(rotations,tag):
     conn = sqlite3.connect(DBNAME)
-    conn.row_factory = sqlite3.Row  
+    conn.row_factory = sqlite3.Row
+    patternFound = None
+    orList = orGenerator(rotations)
 
     c = conn.cursor()
     #TODO gestione eccezioni
-    for row in c.execute("SELECT * FROM pattern WHERE tag = '%s'" % tag):
-        print(row["name"])
+    #! molto pericolosa, ma non riusciamo a farla funzionare in altri modi
+    for row in c.execute(f'SELECT * FROM pattern WHERE (tag=\'{tag}\') AND ({orList})'):
+        patternFound = row["name"]
     conn.close()
+    print(patternFound)
+    return patternFound
 
 class riga():
     pass
