@@ -31,19 +31,14 @@ def init():
 
     # Create table
     c.execute('''CREATE TABLE  if not exists pattern
-                 (name TEXT, tag TEXT,matrix text)''')
-    # Save (commit) the changes
+                 (name TEXT, tag TEXT,matrix text, x INTEGER, y INTEGER)''')
     conn.commit()
 
-    # We can also close the connection if we are done with it.
-    # Just be sure any changes have been committed or they will be lost.
-    #conn.close()
-
-def insert(name, tag, pattern, rotations):
+def insert(name, tag, x, y, pattern, rotations):
 
     """[Insertion function]
     ### Returns:
-        Integer -- 0 inserimento effettuato con successo, 1 matrice già presente
+        Integer -- 1 inserimento effettuato con successo, 0 matrice già presente
     """
 
     risultato = 0
@@ -51,12 +46,10 @@ def insert(name, tag, pattern, rotations):
     c = conn.cursor()
     # Insert a row of data
     if(not search_pattern(rotations,tag)):
-        c.execute("INSERT INTO pattern VALUES (?,?,?)", (name,tag,pattern))
+        c.execute("INSERT INTO pattern VALUES (?,?,?,?,?)", (name,tag,pattern,x,y))
         risultato = 1
-        print("Insert success")
         conn.commit()
     conn.close()
-    print(risultato)
     return risultato
 
 def clear():
@@ -81,16 +74,14 @@ def or_generator(rotations):
             or_string += " OR "
     return or_string
 
-def search_pattern(rotations,tag):
+def search_pattern(rotations,tag,x,y):
     conn = sqlite3.connect(DBNAME)
     conn.row_factory = sqlite3.Row
     patternFound = None
     orList = or_generator(rotations)
 
     c = conn.cursor()
-    #TODO gestione eccezioni
-    #! molto pericolosa, ma non riusciamo a farla funzionare in altri modi
-    for row in c.execute(f'SELECT * FROM pattern WHERE (tag=\'{tag}\') AND ({orList})'):
+    for row in c.execute(f'SELECT * FROM pattern WHERE (tag=\'{tag}\') AND x={x} AND y={y} AND ({orList})'):
         patternFound = row["name"]
     conn.close()
     print(patternFound)

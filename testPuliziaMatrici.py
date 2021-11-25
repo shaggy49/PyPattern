@@ -15,7 +15,7 @@ def matrix_printer(matr):
 
 def rotate_by_90(matr):
     new_matrix = []
-    horizontal_size = np.shape(matr)[1]  # ?prende la lunghezza in orizontale
+    horizontal_size = np.shape(matr)[1]  # prende la lunghezza in orizontale
     for i in range(horizontal_size):
         column = get_column(matr, i)
         # ? lo mette al contrario https://stackoverflow.com/questions/6771428/most-efficient-way-to-reverse-a-numpy-array
@@ -143,6 +143,8 @@ matr_test1 = [
     [1, 1, 1, 0, 0],
     [1, 0, 1, 0, 0],
 ]
+
+
 horizontalClean = horizontal_cleaner(matr_test1)
 vertical_clean = vertical_cleaner(horizontalClean)
 
@@ -163,14 +165,15 @@ matrix_printer(rotated)
 print(generate_serialized_list(vertical_clean))
 #dbm.search_pattern(serialize_matrix(vertical_clean),'alphabet')
 #dbm.search_pattern(serialize_matrix(rotated))
-#dbm.search_pattern(generate_serialized_list(vertical_clean), 'alphabet')
 dbm.init()
-dbm.insert(
+dbm.search_pattern(generate_serialized_list(vertical_clean), 'alphabet')
+
+"""dbm.insert(
     'a',
     'alphabet',
     serialize_matrix(vertical_clean),
     generate_serialized_list(vertical_clean)
-    )
+    )"""
 
 """
 1 1 1 1 
