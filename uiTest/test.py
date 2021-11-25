@@ -9,76 +9,119 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import numpy as np
 
 
 
 
 
 class Ui_MainWindow(object):
+    clickedMatrix = [];
 
-    def buttonClicked(self, i):
-        print("Mi hai cliccato {}".format(i))
-
+    def buttonClicked(self, i, j,button):
+        if([i,j] in self.clickedMatrix):
+            button.setStyleSheet(
+                "QPushButton {\n"
+                " padding: 0;\n"
+                " border: none;\n"
+                " display:inline-block;\n"
+                " margin-left:0;\n"
+                " margin-right:0;\n"
+                "    background-color: white;\n"
+                "}\n"
+                "QPushButton:hover {\n"
+                "    background-color: gray;\n"
+                "}\n"
+                "QPushButton:pressed {\n"
+                "    background-color: black;\n"
+                "}\n"
+            )
+            self.clickedMatrix.remove([i,j])
+            print("lo rimuovo dalla matrice")
+        else:
+            self.clickedMatrix.append([i,j])
+            button.setStyleSheet(
+                "QPushButton {\n"
+                " padding: 0;\n"
+                " border: none;\n"
+                " display:inline-block;\n"
+                " margin-left:0;\n"
+                " margin-right:0;\n"
+                "    background-color: black;\n"
+                "}\n"
+                "QPushButton:hover {\n"
+                "    background-color: gray;\n"
+                "}\n"
+                "QPushButton:pressed {\n"
+                "    background-color: black;\n"
+                "}\n"
+            )
+            print("lo aggiungo alla matrice")
+        print(self.clickedMatrix)
+        
     def buttonsGenerator(self, m, n):
         #matrix_buttons = [];
-        for i in range(m*n):
-            self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
-            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-            sizePolicy.setHorizontalStretch(0)
-            sizePolicy.setVerticalStretch(0)
-            sizePolicy.setHeightForWidth(self.pushButton_4.sizePolicy().hasHeightForWidth())
-            self.pushButton_4.setSizePolicy(sizePolicy)
+        for i in range(m):
+            for j in range(n):
+                pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
+                sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+                sizePolicy.setHorizontalStretch(0)
+                sizePolicy.setVerticalStretch(0)
+                sizePolicy.setHeightForWidth(pushButton_4.sizePolicy().hasHeightForWidth())
+                pushButton_4.setSizePolicy(sizePolicy)
 
-            palette = QtGui.QPalette()
-            brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-            brush.setStyle(QtCore.Qt.SolidPattern)
-            palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Button, brush)
-            brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-            brush.setStyle(QtCore.Qt.SolidPattern)
-            palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Base, brush)
-            brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-            brush.setStyle(QtCore.Qt.SolidPattern)
-            palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Window, brush)
-            brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-            brush.setStyle(QtCore.Qt.SolidPattern)
-            palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Button, brush)
-            brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-            brush.setStyle(QtCore.Qt.SolidPattern)
-            palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Base, brush)
-            brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-            brush.setStyle(QtCore.Qt.SolidPattern)
-            palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Window, brush)
-            brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-            brush.setStyle(QtCore.Qt.SolidPattern)
-            palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Button, brush)
-            brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-            brush.setStyle(QtCore.Qt.SolidPattern)
-            palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Base, brush)
-            brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-            brush.setStyle(QtCore.Qt.SolidPattern)
-            palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Window, brush)
+                palette = QtGui.QPalette()
+                brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+                brush.setStyle(QtCore.Qt.SolidPattern)
+                palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Button, brush)
+                brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+                brush.setStyle(QtCore.Qt.SolidPattern)
+                palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Base, brush)
+                brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+                brush.setStyle(QtCore.Qt.SolidPattern)
+                palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Window, brush)
+                brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+                brush.setStyle(QtCore.Qt.SolidPattern)
+                palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Button, brush)
+                brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+                brush.setStyle(QtCore.Qt.SolidPattern)
+                palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Base, brush)
+                brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+                brush.setStyle(QtCore.Qt.SolidPattern)
+                palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Window, brush)
+                brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+                brush.setStyle(QtCore.Qt.SolidPattern)
+                palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Button, brush)
+                brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+                brush.setStyle(QtCore.Qt.SolidPattern)
+                palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Base, brush)
+                brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+                brush.setStyle(QtCore.Qt.SolidPattern)
+                palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Window, brush)
 
-            self.pushButton_4.setPalette(palette)
-            self.pushButton_4.setStyleSheet("QPushButton {\n"
-            " padding: 0;\n"
-            " border: none;\n"
-            " display:inline-block;\n"
-            " margin-left:0;\n"
-            " margin-right:0;\n"
-            "    background-color: white;\n"
-            "}\n"
-            "QPushButton:pressed {\n"
-            "    background-color: black;\n"
-            "}")
-            self.pushButton_4.setCheckable(False)
-            self.pushButton_4.setChecked(False)
-            self.pushButton_4.setAutoRepeat(False)
-            self.pushButton_4.setDefault(False)
-            self.pushButton_4.setFlat(False)
-            self.pushButton_4.setObjectName("button_{}".format(i))
-            self.pushButton_4.clicked.connect(lambda ch, i=i: self.buttonClicked(i))
+                pushButton_4.setPalette(palette)
+                pushButton_4.setStyleSheet("QPushButton {\n"
+                " padding: 0;\n"
+                " border: none;\n"
+                " display:inline-block;\n"
+                " margin-left:0;\n"
+                " margin-right:0;\n"
+                "    background-color: white;\n"
+                "}\n"
+                "QPushButton:hover {\n"
+                "    background-color: gray;\n"
+                "}\n"
+                "QPushButton:pressed {\n"
+                "    background-color: black;\n"
+                "}\n")
 
-            self.grid.addWidget(self.pushButton_4, 1, 1, 1, 1)
+
+                pushButton_4.setObjectName("button_{}".format(str(i)+str(j)))
+                pushButton_4.clicked.connect(lambda ch, i=i,j=j,button=pushButton_4: self.buttonClicked(i,j,button))
+
+                #print("button_{}".format(str(i)+str(j)))
+                #print(str(i)+" "+ str(j))
+                self.grid.addWidget(pushButton_4, i, j)
 
 
         
@@ -141,226 +184,9 @@ class Ui_MainWindow(object):
         self.grid.setObjectName("grid")
 
         ##########################
-
-        self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton_4.sizePolicy().hasHeightForWidth())
-        self.pushButton_4.setSizePolicy(sizePolicy)
-
-        palette = QtGui.QPalette()
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Button, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Base, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Window, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Button, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Base, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Window, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Button, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Base, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Window, brush)
-
-        self.pushButton_4.setPalette(palette)
-        self.pushButton_4.setStyleSheet("QPushButton {\n"
-        " padding: 0;\n"
-        " border: none;\n"
-        " display:inline-block;\n"
-        " margin-left:0;\n"
-        " margin-right:0;\n"
-        "    background-color: white;\n"
-        "}\n"
-        "QPushButton:pressed {\n"
-        "    background-color: black;\n"
-        "}")
-        self.pushButton_4.setCheckable(False)
-        self.pushButton_4.setChecked(False)
-        self.pushButton_4.setAutoRepeat(False)
-        self.pushButton_4.setDefault(False)
-        self.pushButton_4.setFlat(False)
-        self.pushButton_4.setObjectName("pushButton_4")
-
-        self.grid.addWidget(self.pushButton_4, 1, 1, 1, 1)
-
-        ##########################
-        self.evilButton = QtWidgets.QPushButton(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.evilButton.sizePolicy().hasHeightForWidth())
-        self.evilButton.setSizePolicy(sizePolicy)
-        palette = QtGui.QPalette()
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Button, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Base, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Window, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Button, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Base, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Window, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Button, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Base, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Window, brush)
-        self.evilButton.setPalette(palette)
-        self.evilButton.setStyleSheet("QPushButton {\n"
-        " padding: 0;\n"
-        " border: none;\n"
-        " display:inline-block;\n"
-        " margin-left:0;\n"
-        " margin-right:0;\n"
-        "    background-color: white;\n"
-        "}\n"
-        "QPushButton:pressed {\n"
-        "    background-color: black;\n"
-        "}")
-        self.evilButton.setCheckable(False)
-        self.evilButton.setChecked(False)
-        self.evilButton.setAutoRepeat(False)
-        self.evilButton.setDefault(False)
-        self.evilButton.setFlat(False)
-        self.evilButton.setObjectName("evilButton")
-        self.grid.addWidget(self.evilButton, 0, 1, 1, 1)
-        self.evilButtonff = QtWidgets.QPushButton(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.evilButtonff.sizePolicy().hasHeightForWidth())
-        self.evilButtonff.setSizePolicy(sizePolicy)
-        palette = QtGui.QPalette()
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Button, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Base, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Window, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Button, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Base, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Window, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Button, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Base, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Window, brush)
-        self.evilButtonff.setPalette(palette)
-        self.evilButtonff.setStyleSheet("QPushButton {\n"
-        " padding: 0;\n"
-        " border: none;\n"
-        " display:inline-block;\n"
-        " margin-left:0;\n"
-        " margin-right:0;\n"
-        "    background-color: white;\n"
-        "}\n"
-        "QPushButton:pressed {\n"
-        "    background-color: black;\n"
-        "}")
-        self.evilButtonff.setCheckable(False)
-        self.evilButtonff.setChecked(False)
-        self.evilButtonff.setAutoRepeat(False)
-        self.evilButtonff.setDefault(False)
-        self.evilButtonff.setFlat(False)
-        self.evilButtonff.setObjectName("evilButtonff")
-
-        self.grid.addWidget(self.evilButtonff, 0, 0, 1, 1)
-        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton_3.sizePolicy().hasHeightForWidth())
-        self.pushButton_3.setSizePolicy(sizePolicy)
-        palette = QtGui.QPalette()
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Button, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Base, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Window, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Button, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Base, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Window, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Button, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Base, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Window, brush)
-        self.pushButton_3.setPalette(palette)
-        self.pushButton_3.setAutoFillBackground(False)
-        self.pushButton_3.setStyleSheet("QPushButton {\n"
-        " padding: 0;\n"
-        " border: none;\n"
-        " display:inline-block;\n"
-        " margin-left:0;\n"
-        " margin-right:0;\n"
-        "    background-color: white;\n"
-        "}\n"
-        "QPushButton:pressed {\n"
-        "    background-color: black;\n"
-        "}")
-        self.pushButton_3.setCheckable(False)
-        self.pushButton_3.setChecked(False)
-        self.pushButton_3.setAutoRepeat(False)
-        self.pushButton_3.setDefault(False)
-        self.pushButton_3.setFlat(False)
-        self.pushButton_3.setObjectName("pushButton_3")
-        self.grid.addWidget(self.pushButton_3, 1, 0, 1, 1)
+        self.buttonsGenerator(8,8)
+        # ##########################
+        
         self.horizontalLayout.addLayout(self.grid)
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()
         self.verticalLayout_2.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
@@ -450,18 +276,12 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        def retranslateUi(self, MainWindow):
+    def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "App"))
         self.patternNameLineEdit.setToolTip(_translate("MainWindow", "Pattern name to look for/save"))
         self.patternNameLineEdit.setPlaceholderText(_translate("MainWindow", "Pattern name"))
         self.settingsButton.setText(_translate("MainWindow", "Settings"))
-        self.pushButton_4.setText(_translate("MainWindow", "PushButton"))
-        self.evilButton.setText(_translate("MainWindow", "PushButton"))
-        self.evilButtonff.setAccessibleName(_translate("MainWindow", "evilButton"))
-        self.evilButtonff.setAccessibleDescription(_translate("MainWindow", "evilButton"))
-        self.evilButtonff.setText(_translate("MainWindow", "evilButton"))
-        self.pushButton_3.setText(_translate("MainWindow", "PushButton"))
         self.insertButton.setText(_translate("MainWindow", "Insert"))
         self.searchPatternButton.setText(_translate("MainWindow", "Search pattern"))
         self.searchSizeButton.setText(_translate("MainWindow", "Search size"))
