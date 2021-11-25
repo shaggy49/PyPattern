@@ -13,14 +13,7 @@ import numpy as np
 
 
 
-
-
-class Ui_MainWindow(object):
-    clickedMatrix = [];
-
-    def buttonClicked(self, i, j,button):
-        if([i,j] in self.clickedMatrix):
-            button.setStyleSheet(
+BOTTONE_MATRICE_STANDARD = (
                 "QPushButton {\n"
                 " padding: 0;\n"
                 " border: none;\n"
@@ -34,13 +27,9 @@ class Ui_MainWindow(object):
                 "}\n"
                 "QPushButton:pressed {\n"
                 "    background-color: black;\n"
-                "}\n"
-            )
-            self.clickedMatrix.remove([i,j])
-            print("lo rimuovo dalla matrice")
-        else:
-            self.clickedMatrix.append([i,j])
-            button.setStyleSheet(
+                "}\n")
+
+BOTTONE_MATRICE_CLICCATO = (
                 "QPushButton {\n"
                 " padding: 0;\n"
                 " border: none;\n"
@@ -56,6 +45,18 @@ class Ui_MainWindow(object):
                 "    background-color: black;\n"
                 "}\n"
             )
+
+class Ui_MainWindow(object):
+    clickedMatrix = [];
+
+    def buttonClicked(self, i, j,button):
+        if([i,j] in self.clickedMatrix):
+            button.setStyleSheet(BOTTONE_MATRICE_STANDARD)
+            self.clickedMatrix.remove([i,j])
+            print("lo rimuovo dalla matrice")
+        else:
+            self.clickedMatrix.append([i,j])
+            button.setStyleSheet(BOTTONE_MATRICE_CLICCATO)
             print("lo aggiungo alla matrice")
         print(self.clickedMatrix)
         
@@ -100,27 +101,12 @@ class Ui_MainWindow(object):
                 palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Window, brush)
 
                 pushButton_4.setPalette(palette)
-                pushButton_4.setStyleSheet("QPushButton {\n"
-                " padding: 0;\n"
-                " border: none;\n"
-                " display:inline-block;\n"
-                " margin-left:0;\n"
-                " margin-right:0;\n"
-                "    background-color: white;\n"
-                "}\n"
-                "QPushButton:hover {\n"
-                "    background-color: gray;\n"
-                "}\n"
-                "QPushButton:pressed {\n"
-                "    background-color: black;\n"
-                "}\n")
+                pushButton_4.setStyleSheet(BOTTONE_MATRICE_STANDARD)
 
 
                 pushButton_4.setObjectName("button_{}".format(str(i)+str(j)))
                 pushButton_4.clicked.connect(lambda ch, i=i,j=j,button=pushButton_4: self.buttonClicked(i,j,button))
 
-                #print("button_{}".format(str(i)+str(j)))
-                #print(str(i)+" "+ str(j))
                 self.grid.addWidget(pushButton_4, i, j)
 
 
