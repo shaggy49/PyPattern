@@ -9,6 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QMessageBox
 import numpy as np
 
 BOTTONE_MATRICE_STANDARD = (
@@ -111,6 +112,21 @@ class Ui_MainWindow(object):
 
                 self.grid.addWidget(pushButton_4, i, j)
 
+    def show_settings_popup(self):
+        print("eccomi")
+        msg = QMessageBox()
+        msg.setWindowTitle("Settings")
+        msg.setText("Change the settings of the matrix")
+        msg.setIcon(QMessageBox.Question)
+        msg.setStandardButtons(QMessageBox.Cancel | QMessageBox.Retry | QMessageBox.Ignore)
+        msg.setDefaultButton(QMessageBox.Retry)
+        msg.setInformativeText("informative text, ya!")
+        msg.setDetailedText("details")
+        msg.buttonClicked.connect(self.popup_button)
+
+    def popup_button(self, i):
+        print(i.text())
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
@@ -161,6 +177,8 @@ class Ui_MainWindow(object):
                                           "}")
         self.settingsButton.setObjectName("settingsButton")
         self.horizontalLayout_2.addWidget(self.settingsButton)
+        self.settingsButton.clicked.connect(lambda: self.show_settings_popup())
+
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
