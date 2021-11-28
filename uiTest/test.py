@@ -11,8 +11,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIntValidator
-from PyQt5.QtWidgets import QDialog, QMessageBox, QLineEdit, QPushButton, QLabel, QFormLayout
-import numpy as np
+from PyQt5.QtWidgets import QDialog, QMessageBox
+from formDimensioniMatrice import Ui_Dialog as dialogDimensioneMatrice
 
 BOTTONE_MATRICE_STANDARD = (
     "QPushButton {\n"
@@ -66,6 +66,21 @@ class EmployeeDlg(QDialog):
 class Ui_MainWindow(object):
     clickedMatrix = []
 
+    def callForSettings(self):
+        Dialog = QtWidgets.QDialog()
+        ui = dialogDimensioneMatrice()
+        ui.setupUi(Dialog)
+        Dialog.show()
+        risp = Dialog.exec_()
+        
+        if(risp == QtWidgets.QDialog.Accepted):
+            print(risp)
+            print(ui.righeMLineEdit.text())
+            print(ui.colonneNLineEdit.text())
+        else:
+            print("aborted")
+
+
     def buttonClicked(self, i, j, button):
         if [i, j] in self.clickedMatrix:
             button.setStyleSheet(BOTTONE_MATRICE_STANDARD)
@@ -106,23 +121,7 @@ class Ui_MainWindow(object):
         self.msg.setDefaultButton(QMessageBox.Save)
         self.msg.show()'''
 
-    def showdialog():
-        dialog = QDialog()
-        formLayout = QFormLayout()
-"""        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Information)
 
-        msg.setText("Inserisci la dimensione della matrice")
-        msg.setWindowTitle("Impostazioni matri")
-        msg.setDetailedText("The details are as follows:")
-
-        
-        
-        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
-        msg.buttonClicked.connect(msgbtn)
-            
-        retval = msg.exec_()
-        print("value of pressed message box button:", retval)"""
 
     def buttonsGenerator(self, m, n):
         # matrix_buttons = [];
@@ -235,7 +234,7 @@ class Ui_MainWindow(object):
         )
         self.settingsButton.setObjectName("settingsButton")
         self.horizontalLayout_2.addWidget(self.settingsButton)
-        self.settingsButton.clicked.connect(lambda: self.onEmployeeBtnClicked())
+        self.settingsButton.clicked.connect(self.callForSettings)
 
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
