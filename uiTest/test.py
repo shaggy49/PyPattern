@@ -26,7 +26,8 @@ BOTTONE_MATRICE_STANDARD = (
     "}\n"
     "QPushButton:pressed {\n"
     "    background-color: black;\n"
-    "}\n")
+    "}\n"
+)
 
 BOTTONE_MATRICE_CLICCATO = (
     "QPushButton {\n"
@@ -47,10 +48,10 @@ BOTTONE_MATRICE_CLICCATO = (
 
 
 class Ui_MainWindow(object):
-    clickedMatrix = [];
+    clickedMatrix = []
 
     def buttonClicked(self, i, j, button):
-        if ([i, j] in self.clickedMatrix):
+        if [i, j] in self.clickedMatrix:
             button.setStyleSheet(BOTTONE_MATRICE_STANDARD)
             self.clickedMatrix.remove([i, j])
             print("lo rimuovo dalla matrice")
@@ -60,19 +61,48 @@ class Ui_MainWindow(object):
             print("lo aggiungo alla matrice")
         print(self.clickedMatrix)
 
+    def show_clear_matrix_popup(self):
+        self.msg = QMessageBox()
+        self.msg.setWindowTitle("Restore")
+        self.msg.setText("Restore the defaul matrix?")
+        self.msg.setIcon(QMessageBox.Question)
+        self.msg.setStandardButtons(QMessageBox.Yes | QMessageBox.Cancel)
+        self.msg.setDefaultButton(QMessageBox.Cancel)
+        self.msg.show()
+        self.msg.buttonClicked.connect(lambda: self.clearAll())
+
+    def show_settings_matrix_popup(self):
+        self.msg = QMessageBox()
+        self.msg.setWindowTitle("Settings")
+        self.msg.setText("Insert the dimension of the matrix")
+        self.msg.setIcon(QMessageBox.Question)
+        self.msg.setStandardButtons(QMessageBox.Save)
+        self.msg.setDefaultButton(QMessageBox.Retry)
+        self.msg.show()
+
     def clearAll(self):
+        #? pulizia variabile matrice
         self.clickedMatrix.clear()
-        print(self.clickedMatrix)
+
+        #? cicla per ricolorare la matrice
+        for i in range(self.grid.count()):
+            item = self.grid.itemAt(i).widget()
+            if isinstance(item, QtWidgets.QPushButton):
+                item.setStyleSheet(BOTTONE_MATRICE_STANDARD)
 
     def buttonsGenerator(self, m, n):
         # matrix_buttons = [];
         for i in range(m):
             for j in range(n):
                 pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
-                sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+                sizePolicy = QtWidgets.QSizePolicy(
+                    QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+                )
                 sizePolicy.setHorizontalStretch(0)
                 sizePolicy.setVerticalStretch(0)
-                sizePolicy.setHeightForWidth(pushButton_4.sizePolicy().hasHeightForWidth())
+                sizePolicy.setHeightForWidth(
+                    pushButton_4.sizePolicy().hasHeightForWidth()
+                )
                 pushButton_4.setSizePolicy(sizePolicy)
 
                 palette = QtGui.QPalette()
@@ -108,24 +138,13 @@ class Ui_MainWindow(object):
                 pushButton_4.setStyleSheet(BOTTONE_MATRICE_STANDARD)
 
                 pushButton_4.setObjectName("button_{}".format(str(i) + str(j)))
-                pushButton_4.clicked.connect(lambda ch, i=i, j=j, button=pushButton_4: self.buttonClicked(i, j, button))
+                pushButton_4.clicked.connect(
+                    lambda ch, i=i, j=j, button=pushButton_4: self.buttonClicked(
+                        i, j, button
+                    )
+                )
 
                 self.grid.addWidget(pushButton_4, i, j)
-
-    def show_settings_popup(self):
-        print("eccomi")
-        msg = QMessageBox()
-        msg.setWindowTitle("Settings")
-        msg.setText("Change the settings of the matrix")
-        msg.setIcon(QMessageBox.Question)
-        msg.setStandardButtons(QMessageBox.Cancel | QMessageBox.Retry | QMessageBox.Ignore)
-        msg.setDefaultButton(QMessageBox.Retry)
-        msg.setInformativeText("informative text, ya!")
-        msg.setDetailedText("details")
-        msg.buttonClicked.connect(self.popup_button)
-
-    def popup_button(self, i):
-        print(i.text())
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -144,40 +163,44 @@ class Ui_MainWindow(object):
         self.patternNameLineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.patternNameLineEdit.setStatusTip("")
         self.patternNameLineEdit.setWhatsThis("")
-        self.patternNameLineEdit.setStyleSheet("QLineEdit{\n"
-                                               "    color: #494949 !important;\n"
-                                               "    text-decoration: none;\n"
-                                               "    background: #ffffff;\n"
-                                               "    margin-bottom:5px;\n"
-                                               "    padding: 0.2em;\n"
-                                               "    border: 4px solid #494949 !important;\n"
-                                               "}")
+        self.patternNameLineEdit.setStyleSheet(
+            "QLineEdit{\n"
+            "    color: #494949 !important;\n"
+            "    text-decoration: none;\n"
+            "    background: #ffffff;\n"
+            "    margin-bottom:5px;\n"
+            "    padding: 0.2em;\n"
+            "    border: 4px solid #494949 !important;\n"
+            "}"
+        )
         self.patternNameLineEdit.setInputMask("")
         self.patternNameLineEdit.setText("")
         self.patternNameLineEdit.setObjectName("patternNameLineEdit")
         self.horizontalLayout_2.addWidget(self.patternNameLineEdit)
         self.settingsButton = QtWidgets.QPushButton(self.centralwidget)
-        self.settingsButton.setStyleSheet("QPushButton {\n"
-                                          "    color: #494949 !important;\n"
-                                          "    text-transform: uppercase;\n"
-                                          "    text-decoration: none;\n"
-                                          "    background: #ffffff;\n"
-                                          "    margin-bottom:5px;\n"
-                                          "    padding: 0.2em;\n"
-                                          "    border: 4px solid #494949 !important;\n"
-                                          "    transition: all 0.4s ease 0s;\n"
-                                          "    border-radius:5px;\n"
-                                          "}\n"
-                                          "\n"
-                                          "QPushButton:pressed {\n"
-                                          "    color: #ffffff !important;\n"
-                                          "    background: #f6b93b;\n"
-                                          "    border-color: #f6b93b !important;\n"
-                                          "    transition: all 0.4s ease 0s;\n"
-                                          "}")
+        self.settingsButton.setStyleSheet(
+            "QPushButton {\n"
+            "    color: #494949 !important;\n"
+            "    text-transform: uppercase;\n"
+            "    text-decoration: none;\n"
+            "    background: #ffffff;\n"
+            "    margin-bottom:5px;\n"
+            "    padding: 0.2em;\n"
+            "    border: 4px solid #494949 !important;\n"
+            "    transition: all 0.4s ease 0s;\n"
+            "    border-radius:5px;\n"
+            "}\n"
+            "\n"
+            "QPushButton:pressed {\n"
+            "    color: #ffffff !important;\n"
+            "    background: #f6b93b;\n"
+            "    border-color: #f6b93b !important;\n"
+            "    transition: all 0.4s ease 0s;\n"
+            "}"
+        )
         self.settingsButton.setObjectName("settingsButton")
         self.horizontalLayout_2.addWidget(self.settingsButton)
-        self.settingsButton.clicked.connect(lambda: self.show_settings_popup())
+        self.settingsButton.clicked.connect(lambda: self.show_settings_matrix_popup())
 
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
@@ -188,7 +211,7 @@ class Ui_MainWindow(object):
         self.grid.setObjectName("grid")
 
         ##########################
-        self.buttonsGenerator(4, 8)
+        self.buttonsGenerator(10, 10)
         # ##########################
 
         self.horizontalLayout.addLayout(self.grid)
@@ -197,97 +220,109 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setContentsMargins(15, -1, 15, -1)
         self.verticalLayout_2.setSpacing(0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem = QtWidgets.QSpacerItem(
+            20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding
+        )
         self.verticalLayout_2.addItem(spacerItem)
         self.insertButton = QtWidgets.QPushButton(self.centralwidget)
-        self.insertButton.setStyleSheet("QPushButton {\n"
-                                        "    color: #494949 !important;\n"
-                                        "    text-transform: uppercase;\n"
-                                        "    text-decoration: none;\n"
-                                        "    background: #ffffff;\n"
-                                        "    margin-bottom:5px;\n"
-                                        "    padding: 0.2em;\n"
-                                        "    border: 4px solid #494949 !important;\n"
-                                        "    transition: all 0.4s ease 0s;\n"
-                                        "    border-radius:5px;\n"
-                                        "}\n"
-                                        "\n"
-                                        "QPushButton:pressed {\n"
-                                        "    color: #ffffff !important;\n"
-                                        "    background: #f6b93b;\n"
-                                        "    border-color: #f6b93b !important;\n"
-                                        "    transition: all 0.4s ease 0s;\n"
-                                        "}")
+        self.insertButton.setStyleSheet(
+            "QPushButton {\n"
+            "    color: #494949 !important;\n"
+            "    text-transform: uppercase;\n"
+            "    text-decoration: none;\n"
+            "    background: #ffffff;\n"
+            "    margin-bottom:5px;\n"
+            "    padding: 0.2em;\n"
+            "    border: 4px solid #494949 !important;\n"
+            "    transition: all 0.4s ease 0s;\n"
+            "    border-radius:5px;\n"
+            "}\n"
+            "\n"
+            "QPushButton:pressed {\n"
+            "    color: #ffffff !important;\n"
+            "    background: #f6b93b;\n"
+            "    border-color: #f6b93b !important;\n"
+            "    transition: all 0.4s ease 0s;\n"
+            "}"
+        )
         self.insertButton.setObjectName("insertButton")
         self.verticalLayout_2.addWidget(self.insertButton)
         self.searchPatternButton = QtWidgets.QPushButton(self.centralwidget)
-        self.searchPatternButton.setStyleSheet("QPushButton {\n"
-                                               "    color: #494949 !important;\n"
-                                               "    text-transform: uppercase;\n"
-                                               "    text-decoration: none;\n"
-                                               "    background: #ffffff;\n"
-                                               "    margin-bottom:5px;\n"
-                                               "    padding: 0.2em;\n"
-                                               "    border: 4px solid #494949 !important;\n"
-                                               "    transition: all 0.4s ease 0s;\n"
-                                               "    border-radius:5px;\n"
-                                               "}\n"
-                                               "\n"
-                                               "QPushButton:pressed {\n"
-                                               "    color: #ffffff !important;\n"
-                                               "    background: #f6b93b;\n"
-                                               "    border-color: #f6b93b !important;\n"
-                                               "    transition: all 0.4s ease 0s;\n"
-                                               "}")
+        self.searchPatternButton.setStyleSheet(
+            "QPushButton {\n"
+            "    color: #494949 !important;\n"
+            "    text-transform: uppercase;\n"
+            "    text-decoration: none;\n"
+            "    background: #ffffff;\n"
+            "    margin-bottom:5px;\n"
+            "    padding: 0.2em;\n"
+            "    border: 4px solid #494949 !important;\n"
+            "    transition: all 0.4s ease 0s;\n"
+            "    border-radius:5px;\n"
+            "}\n"
+            "\n"
+            "QPushButton:pressed {\n"
+            "    color: #ffffff !important;\n"
+            "    background: #f6b93b;\n"
+            "    border-color: #f6b93b !important;\n"
+            "    transition: all 0.4s ease 0s;\n"
+            "}"
+        )
         self.searchPatternButton.setObjectName("searchPatternButton")
         self.verticalLayout_2.addWidget(self.searchPatternButton)
         self.searchSizeButton = QtWidgets.QPushButton(self.centralwidget)
-        self.searchSizeButton.setStyleSheet("QPushButton {\n"
-                                            "    color: #494949 !important;\n"
-                                            "    text-transform: uppercase;\n"
-                                            "    text-decoration: none;\n"
-                                            "    background: #ffffff;\n"
-                                            "    margin-bottom:5px;\n"
-                                            "    padding: 0.2em;\n"
-                                            "    border: 4px solid #494949 !important;\n"
-                                            "    transition: all 0.4s ease 0s;\n"
-                                            "    border-radius:5px;\n"
-                                            "}\n"
-                                            "\n"
-                                            "QPushButton:pressed {\n"
-                                            "    color: #ffffff !important;\n"
-                                            "    background: #f6b93b;\n"
-                                            "    border-color: #f6b93b !important;\n"
-                                            "    transition: all 0.4s ease 0s;\n"
-                                            "}")
+        self.searchSizeButton.setStyleSheet(
+            "QPushButton {\n"
+            "    color: #494949 !important;\n"
+            "    text-transform: uppercase;\n"
+            "    text-decoration: none;\n"
+            "    background: #ffffff;\n"
+            "    margin-bottom:5px;\n"
+            "    padding: 0.2em;\n"
+            "    border: 4px solid #494949 !important;\n"
+            "    transition: all 0.4s ease 0s;\n"
+            "    border-radius:5px;\n"
+            "}\n"
+            "\n"
+            "QPushButton:pressed {\n"
+            "    color: #ffffff !important;\n"
+            "    background: #f6b93b;\n"
+            "    border-color: #f6b93b !important;\n"
+            "    transition: all 0.4s ease 0s;\n"
+            "}"
+        )
         self.searchSizeButton.setObjectName("searchSizeButton")
         self.verticalLayout_2.addWidget(self.searchSizeButton)
         ###
         self.clearButton = QtWidgets.QPushButton(self.centralwidget)
-        self.clearButton.setStyleSheet("QPushButton {\n"
-                                       "    color: #494949 !important;\n"
-                                       "    text-transform: uppercase;\n"
-                                       "    text-decoration: none;\n"
-                                       "    background: #ffffff;\n"
-                                       "    margin-bottom:5px;\n"
-                                       "    padding: 0.2em;\n"
-                                       "    border: 4px solid #494949 !important;\n"
-                                       "    transition: all 0.4s ease 0s;\n"
-                                       "    border-radius:5px;\n"
-                                       "}\n"
-                                       "\n"
-                                       "QPushButton:pressed {\n"
-                                       "    color: #ffffff !important;\n"
-                                       "    background: #f6b93b;\n"
-                                       "    border-color: #f6b93b !important;\n"
-                                       "    transition: all 0.4s ease 0s;\n"
-                                       "}")
+        self.clearButton.setStyleSheet(
+            "QPushButton {\n"
+            "    color: #494949 !important;\n"
+            "    text-transform: uppercase;\n"
+            "    text-decoration: none;\n"
+            "    background: #ffffff;\n"
+            "    margin-bottom:5px;\n"
+            "    padding: 0.2em;\n"
+            "    border: 4px solid #494949 !important;\n"
+            "    transition: all 0.4s ease 0s;\n"
+            "    border-radius:5px;\n"
+            "}\n"
+            "\n"
+            "QPushButton:pressed {\n"
+            "    color: #ffffff !important;\n"
+            "    background: #f6b93b;\n"
+            "    border-color: #f6b93b !important;\n"
+            "    transition: all 0.4s ease 0s;\n"
+            "}"
+        )
         self.clearButton.setObjectName("clearAll")
         self.verticalLayout_2.addWidget(self.clearButton)
-        self.clearButton.clicked.connect(lambda: self.clearAll())
+        self.clearButton.clicked.connect(lambda: self.show_clear_matrix_popup())
 
         ####
-        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem1 = QtWidgets.QSpacerItem(
+            20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding
+        )
         self.verticalLayout_2.addItem(spacerItem1)
         self.horizontalLayout.addLayout(self.verticalLayout_2)
         self.verticalLayout.addLayout(self.horizontalLayout)
@@ -308,8 +343,12 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "App"))
-        self.patternNameLineEdit.setToolTip(_translate("MainWindow", "Pattern name to look for/save"))
-        self.patternNameLineEdit.setPlaceholderText(_translate("MainWindow", "Pattern name"))
+        self.patternNameLineEdit.setToolTip(
+            _translate("MainWindow", "Pattern name to look for/save")
+        )
+        self.patternNameLineEdit.setPlaceholderText(
+            _translate("MainWindow", "Pattern name")
+        )
         self.settingsButton.setText(_translate("MainWindow", "Settings"))
         self.insertButton.setText(_translate("MainWindow", "Insert"))
         self.searchPatternButton.setText(_translate("MainWindow", "Search pattern"))
