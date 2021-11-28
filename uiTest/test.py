@@ -9,7 +9,9 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIntValidator
+from PyQt5.QtWidgets import QDialog, QMessageBox, QLineEdit, QPushButton, QLabel, QFormLayout
 import numpy as np
 
 BOTTONE_MATRICE_STANDARD = (
@@ -46,6 +48,20 @@ BOTTONE_MATRICE_CLICCATO = (
     "}\n"
 )
 
+class Ui_Dialog(object):
+      def setupUi(self, Dialog):
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(431, 431)
+        self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
+
+class EmployeeDlg(QDialog):
+    """Employee dialog."""
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        # Create an instance of the GUI
+        self.ui = Ui_Dialog()
+        # Run the .setupUi() method to show the GUI
+        self.ui.setupUi(self)
 
 class Ui_MainWindow(object):
     clickedMatrix = []
@@ -70,16 +86,7 @@ class Ui_MainWindow(object):
         self.msg.setDefaultButton(QMessageBox.Cancel)
         self.msg.show()
         self.msg.buttonClicked.connect(lambda: self.clearAll())
-
-    def show_settings_matrix_popup(self):
-        self.msg = QMessageBox()
-        self.msg.setWindowTitle("Settings")
-        self.msg.setText("Insert the dimension of the matrix")
-        self.msg.setIcon(QMessageBox.Question)
-        self.msg.setStandardButtons(QMessageBox.Save)
-        self.msg.setDefaultButton(QMessageBox.Retry)
-        self.msg.show()
-
+    
     def clearAll(self):
         #? pulizia variabile matrice
         self.clickedMatrix.clear()
@@ -89,6 +96,33 @@ class Ui_MainWindow(object):
             item = self.grid.itemAt(i).widget()
             if isinstance(item, QtWidgets.QPushButton):
                 item.setStyleSheet(BOTTONE_MATRICE_STANDARD)
+
+    '''def show_settings_matrix_popup(self):
+        self.msg = QMessageBox()
+        self.msg.setWindowTitle("Settings")
+        self.msg.setText("Insert the dimension of the matrix")
+        self.msg.setIcon(QMessageBox.Question)
+        self.msg.setStandardButtons(QMessageBox.Save | QMessageBox.Reset)
+        self.msg.setDefaultButton(QMessageBox.Save)
+        self.msg.show()'''
+
+    def showdialog():
+        dialog = QDialog()
+        formLayout = QFormLayout()
+"""        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+
+        msg.setText("Inserisci la dimensione della matrice")
+        msg.setWindowTitle("Impostazioni matri")
+        msg.setDetailedText("The details are as follows:")
+
+        
+        
+        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        msg.buttonClicked.connect(msgbtn)
+            
+        retval = msg.exec_()
+        print("value of pressed message box button:", retval)"""
 
     def buttonsGenerator(self, m, n):
         # matrix_buttons = [];
@@ -146,6 +180,7 @@ class Ui_MainWindow(object):
 
                 self.grid.addWidget(pushButton_4, i, j)
 
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
@@ -200,7 +235,7 @@ class Ui_MainWindow(object):
         )
         self.settingsButton.setObjectName("settingsButton")
         self.horizontalLayout_2.addWidget(self.settingsButton)
-        self.settingsButton.clicked.connect(lambda: self.show_settings_matrix_popup())
+        self.settingsButton.clicked.connect(lambda: self.onEmployeeBtnClicked())
 
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
@@ -211,7 +246,7 @@ class Ui_MainWindow(object):
         self.grid.setObjectName("grid")
 
         ##########################
-        self.buttonsGenerator(10, 10)
+        self.buttonsGenerator(4, 4)
         # ##########################
 
         self.horizontalLayout.addLayout(self.grid)
