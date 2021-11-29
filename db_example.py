@@ -33,7 +33,11 @@ def insert():
     #SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}';
 
     c.execute('''CREATE TABLE if not exists pattern
-                 (name TEXT, tag TEXT, x INTEGER, y INTEGER, matrix text)''')
+                 (  name TEXT, 
+                    tag TEXT, 
+                    x INTEGER, 
+                    y INTEGER, 
+                    matrix text)''')
 
     # Insert a row of data
     c.execute("INSERT INTO pattern VALUES ('A','alphabet',4,3,'010101111101'")
