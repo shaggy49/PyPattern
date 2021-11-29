@@ -14,7 +14,7 @@ from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIntValidator
 from PyQt5.QtWidgets import QDialog, QMessageBox
-from formDimensioniMatrice import Ui_Dialog as dialogDimensioneMatrice
+from settings_dialog import Ui_Dialog as settings_dialog
 
 BOTTONE_MATRICE_STANDARD = (
     "QPushButton {\n"
@@ -60,7 +60,7 @@ class Ui_MainWindow(object):
 
     def call_for_settings(self):
         Dialog = QtWidgets.QDialog()
-        ui = dialogDimensioneMatrice()
+        ui = settings_dialog()
         ui.setupUi(Dialog)
         Dialog.show()
         risp = Dialog.exec_()
@@ -89,7 +89,7 @@ class Ui_MainWindow(object):
         self.msg.setText("Restore the defaul matrix?")
         self.msg.setIcon(QMessageBox.Question)
         self.msg.setStandardButtons(QMessageBox.Yes | QMessageBox.Cancel)
-        self.msg.setDefaultButton(QMessageBox.Cancel)
+        self.msg.setDefaultButton(QMessageBox.Yes)
         self.msg.show()
         self.msg.buttonClicked.connect(self.clearAll)
 
