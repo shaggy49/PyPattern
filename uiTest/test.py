@@ -48,40 +48,32 @@ BOTTONE_MATRICE_CLICCATO = (
     "}\n"
 )
 
+
 class Ui_Dialog(object):
-      def setupUi(self, Dialog):
+    def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(431, 431)
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
 
-class EmployeeDlg(QDialog):
-    """Employee dialog."""
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        # Create an instance of the GUI
-        self.ui = Ui_Dialog()
-        # Run the .setupUi() method to show the GUI
-        self.ui.setupUi(self)
 
 class Ui_MainWindow(object):
     clickedMatrix = []
 
-    def callForSettings(self):
+    def call_for_settings(self):
         Dialog = QtWidgets.QDialog()
         ui = dialogDimensioneMatrice()
         ui.setupUi(Dialog)
         Dialog.show()
         risp = Dialog.exec_()
-        
-        if(risp == QtWidgets.QDialog.Accepted):
+
+        if risp == QtWidgets.QDialog.Accepted:
             print(risp)
             print(ui.righeMLineEdit.text())
             print(ui.colonneNLineEdit.text())
         else:
             print("aborted")
 
-
-    def buttonClicked(self, i, j, button):
+    def button_clicked(self, i, j, button):
         if [i, j] in self.clickedMatrix:
             button.setStyleSheet(BOTTONE_MATRICE_STANDARD)
             self.clickedMatrix.remove([i, j])
@@ -100,28 +92,17 @@ class Ui_MainWindow(object):
         self.msg.setStandardButtons(QMessageBox.Yes | QMessageBox.Cancel)
         self.msg.setDefaultButton(QMessageBox.Cancel)
         self.msg.show()
-        self.msg.buttonClicked.connect(lambda: self.clearAll())
-    
-    def clearAll(self):
-        #? pulizia variabile matrice
+        self.msg.button_clicked.connect(lambda: self.clear_all())
+
+    def clear_all(self):
+        # ? pulizia variabile matrice
         self.clickedMatrix.clear()
 
-        #? cicla per ricolorare la matrice
+        # ? cicla per ricolorare la matrice
         for i in range(self.grid.count()):
             item = self.grid.itemAt(i).widget()
             if isinstance(item, QtWidgets.QPushButton):
                 item.setStyleSheet(BOTTONE_MATRICE_STANDARD)
-
-    '''def show_settings_matrix_popup(self):
-        self.msg = QMessageBox()
-        self.msg.setWindowTitle("Settings")
-        self.msg.setText("Insert the dimension of the matrix")
-        self.msg.setIcon(QMessageBox.Question)
-        self.msg.setStandardButtons(QMessageBox.Save | QMessageBox.Reset)
-        self.msg.setDefaultButton(QMessageBox.Save)
-        self.msg.show()'''
-
-
 
     def buttonsGenerator(self, m, n):
         # matrix_buttons = [];
@@ -172,13 +153,12 @@ class Ui_MainWindow(object):
 
                 pushButton_4.setObjectName("button_{}".format(str(i) + str(j)))
                 pushButton_4.clicked.connect(
-                    lambda ch, i=i, j=j, button=pushButton_4: self.buttonClicked(
+                    lambda ch, i=i, j=j, button=pushButton_4: self.button_clicked(
                         i, j, button
                     )
                 )
 
                 self.grid.addWidget(pushButton_4, i, j)
-
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -234,7 +214,7 @@ class Ui_MainWindow(object):
         )
         self.settingsButton.setObjectName("settingsButton")
         self.horizontalLayout_2.addWidget(self.settingsButton)
-        self.settingsButton.clicked.connect(self.callForSettings)
+        self.settingsButton.clicked.connect(self.call_for_settings)
 
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
@@ -327,7 +307,6 @@ class Ui_MainWindow(object):
         )
         self.searchSizeButton.setObjectName("searchSizeButton")
         self.verticalLayout_2.addWidget(self.searchSizeButton)
-        ###
         self.clearButton = QtWidgets.QPushButton(self.centralwidget)
         self.clearButton.setStyleSheet(
             "QPushButton {\n"
@@ -349,11 +328,9 @@ class Ui_MainWindow(object):
             "    transition: all 0.4s ease 0s;\n"
             "}"
         )
-        self.clearButton.setObjectName("clearAll")
+        self.clearButton.setObjectName("clear_all")
         self.verticalLayout_2.addWidget(self.clearButton)
         self.clearButton.clicked.connect(lambda: self.show_clear_matrix_popup())
-
-        ####
         spacerItem1 = QtWidgets.QSpacerItem(
             20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding
         )
