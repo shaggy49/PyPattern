@@ -1,4 +1,4 @@
-# Progetto python - Tweb1
+# Progetto Python
 
 ## Info
 
