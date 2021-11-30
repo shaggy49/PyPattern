@@ -11,7 +11,7 @@
 from PyQt5 import QtWidgets
 from PyQt5 import QtGui
 from PyQt5 import QtCore
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, endl
 from PyQt5.QtGui import QIntValidator
 from PyQt5.QtWidgets import QDialog, QMessageBox
 from settings_dialog import Ui_Dialog as settings_dialog
@@ -58,6 +58,16 @@ class Ui_Dialog(object):
 class Ui_MainWindow(object):
     clickedMatrix = []
 
+    ###### Riapplicazione della matrice ####
+    #? svuota la gridlayout e la ripopola
+    def reconfig_matrix (self, m,n):
+        self.clickedMatrix.clear()
+        for i in reversed(range(self.grid.count())): 
+            self.grid.itemAt(i).widget().setParent(None)
+                    #print("pippo")
+        self.buttonsGenerator(m,n)
+
+
     def call_for_settings(self):
         Dialog = QtWidgets.QDialog()
         ui = settings_dialog()
@@ -66,11 +76,18 @@ class Ui_MainWindow(object):
         risp = Dialog.exec_()
 
         if risp == QtWidgets.QDialog.Accepted:
-            print(risp)
-            print(ui.righeMLineEdit.text())
-            print(ui.colonneNLineEdit.text())
-        else:
-            print("aborted")
+            try:
+                m= int(ui.righeMLineEdit.text())
+                n= int(ui.colonneNLineEdit.text())
+                self.reconfig_matrix(m,n)
+            except:
+                self.msg = QMessageBox()
+                self.msg.setWindowTitle("Error")
+                self.msg.setText("M and N must be numbers")
+                self.msg.setIcon(QMessageBox.Critical)
+                self.msg.setStandardButtons(QMessageBox.Ok)
+                self.msg.setDefaultButton(QMessageBox.Ok)
+                self.msg.show()
 
     def buttonClicked(self, i, j, button):
         if [i, j] in self.clickedMatrix:
