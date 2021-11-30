@@ -49,24 +49,35 @@ BOTTONE_MATRICE_CLICCATO = (
     "    background-color: black;\n"
     "}\n"
 )
+
+
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(431, 431)
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
 
+
 class Ui_MainWindow(object):
     clickedMatrix = []
 
     ###### Riapplicazione della matrice ####
-    #? svuota la gridlayout e la ripopola
-    def reconfig_matrix (self, m,n):
+    # ? svuota la gridlayout e la ripopola
+    def reconfig_matrix(self, m, n):
         self.clickedMatrix.clear()
-        for i in reversed(range(self.grid.count())): 
+        for i in reversed(range(self.grid.count())):
             self.grid.itemAt(i).widget().setParent(None)
-                    #print("pippo")
-        self.buttonsGenerator(m,n)
+            # print("pippo")
+        self.buttonsGenerator(m, n)
 
+    def error_dialog(self, text):
+        self.msg = QMessageBox()
+        self.msg.setWindowTitle("Error")
+        self.msg.setText(text)
+        self.msg.setIcon(QMessageBox.Critical)
+        self.msg.setStandardButtons(QMessageBox.Ok)
+        self.msg.setDefaultButton(QMessageBox.Ok)
+        self.msg.show()
 
     def call_for_settings(self):
         Dialog = QtWidgets.QDialog()
@@ -77,17 +88,14 @@ class Ui_MainWindow(object):
 
         if risp == QtWidgets.QDialog.Accepted:
             try:
-                m= int(ui.righeMLineEdit.text())
-                n= int(ui.colonneNLineEdit.text())
-                self.reconfig_matrix(m,n)
+                m = int(ui.righeMLineEdit.text())
+                n = int(ui.colonneNLineEdit.text())
+                if m == 0 or n == 0:
+                    self.error_dialog("M and N must be > 0")
+                else:
+                    self.reconfig_matrix(m, n)
             except:
-                self.msg = QMessageBox()
-                self.msg.setWindowTitle("Error")
-                self.msg.setText("M and N must be numbers")
-                self.msg.setIcon(QMessageBox.Critical)
-                self.msg.setStandardButtons(QMessageBox.Ok)
-                self.msg.setDefaultButton(QMessageBox.Ok)
-                self.msg.show()
+                self.error_dialog("M and N must be Integer numbers!")
 
     def buttonClicked(self, i, j, button):
         if [i, j] in self.clickedMatrix:
@@ -111,10 +119,10 @@ class Ui_MainWindow(object):
         self.msg.buttonClicked.connect(self.clearAll)
 
     def clearAll(self):
-        #? pulizia variabile matrice
+        # ? pulizia variabile matrice
         self.clickedMatrix.clear()
 
-        #? cicla per ricolorare la matrice
+        # ? cicla per ricolorare la matrice
         for i in range(self.grid.count()):
             item = self.grid.itemAt(i).widget()
             if isinstance(item, QtWidgets.QPushButton):
@@ -236,7 +244,6 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.addWidget(self.settingsButton)
         self.settingsButton.clicked.connect(self.call_for_settings)
 
-
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
@@ -309,7 +316,6 @@ class Ui_MainWindow(object):
         )
         self.searchPatternButton.setObjectName("searchPatternButton")
         self.verticalLayout_2.addWidget(self.searchPatternButton)
-
 
         #####---Search size button---########
         self.searchSizeButton = QtWidgets.QPushButton(self.centralwidget)
