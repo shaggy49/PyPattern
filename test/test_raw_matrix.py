@@ -9,10 +9,16 @@ matr_test1 = [
     [1, 0, 1, 0, 0],
 ]
 
+matr_gui = [[0, 0, 0, 0, 0, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 1, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
 clean_matrix = utils.matrix_cleaner(matr_test1)
+clean_matrix_gui = utils.matrix_cleaner(matr_gui)
 
 print("Original matrix")
 utils.matrix_printer(matr_test1)
+
+print("Original matrix")
+utils.matrix_printer(matr_gui)
 
 # print("Cleared matrix (vertical):")
 # matrix_printer(vertical_clean)
@@ -22,6 +28,8 @@ utils.matrix_printer(matr_test1)
 
 print("Cleared matrix:")
 utils.matrix_printer(clean_matrix)
+print("Cleared matrix:")
+utils.matrix_printer(clean_matrix_gui)
 
 print("90-degrees matrix:")
 rotated = utils.rotate_by_90(clean_matrix)
