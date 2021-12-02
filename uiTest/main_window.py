@@ -108,6 +108,17 @@ class Ui_MainWindow(object):
         else:
             print("Tupla non inserita")
 
+
+    def searchPatternInDB(self):
+        clean_matrix = utils.matrix_cleaner(self.zero_one_matrix)
+        self.clearAll()
+        dbm.init()
+        patternFound = dbm.search_pattern(utils.generate_serialized_list(clean_matrix), 'alphabet')
+        if(patternFound != None):
+            print(f"Il pattern trovato ha nome = {patternFound}")
+        else:
+            print("Il pattern digitato non è stato trovato!")
+
     def buttonClicked(self, i, j, button):
         if [i, j] in self.clickedMatrix:
             button.setStyleSheet(BOTTONE_MATRICE_STANDARD)
@@ -334,6 +345,7 @@ class Ui_MainWindow(object):
         )
         self.searchPatternButton.setObjectName("searchPatternButton")
         self.verticalLayout_2.addWidget(self.searchPatternButton)
+        self.searchPatternButton.clicked.connect(self.searchPatternInDB)
 
         #####---Search size button---########
         self.searchSizeButton = QtWidgets.QPushButton(self.centralwidget)
