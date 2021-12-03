@@ -50,7 +50,7 @@ def insert(name, tag, pattern, rotations):
     conn = create_connection()
     c = conn.cursor()
     # Insert a row of data
-    if not search_pattern(rotations):
+    if not search_pattern_filtered(rotations,tag):
         c.execute("INSERT INTO pattern VALUES (?,?,?)", (name, tag, pattern))
         risultato = 1
         conn.commit()
@@ -84,12 +84,26 @@ def or_generator(rotations):
 def search_pattern(rotations):
     conn = sqlite3.connect(DBNAME)
     conn.row_factory = sqlite3.Row
-    patternFound = None
+    patternFound =[]
     orList = or_generator(rotations)
 
     c = conn.cursor()
     for row in c.execute(f"SELECT * FROM pattern WHERE ({orList})"):
-        patternFound = row["name"]
+        patternFound.append([row["name"],row["tag"]]) 
+    conn.close()
+    # print(patternFound)
+    return patternFound
+
+#serve per l'inserimento, questo ci permette di inserire pattern ugali ma con tag diversi
+def search_pattern_filtered(rotations, tag):
+    conn = sqlite3.connect(DBNAME)
+    conn.row_factory = sqlite3.Row
+    patternFound =[]
+    orList = or_generator(rotations)
+
+    c = conn.cursor()
+    for row in c.execute(f'SELECT * FROM pattern WHERE (tag=\'{tag}\') AND ({orList})'):
+        patternFound.append([row["name"],row["tag"]]) 
     conn.close()
     # print(patternFound)
     return patternFound

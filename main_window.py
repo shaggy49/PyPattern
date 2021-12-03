@@ -17,7 +17,7 @@ import matrix_util as utils
 from gui.py_files.settings_dialog import Ui_Dialog as settings_dialog
 from gui.py_files.salvataggio_matrice_nome_tag import Ui_Dialog as salvataggio_matrice
 from gui.py_files.risultato_ricerca_dialog import Ui_Dialog as risultato_ricerca_dialog
- 
+
 
 BOTTONE_MATRICE_STANDARD = (
     "QPushButton {\n"
@@ -71,7 +71,7 @@ class Ui_MainWindow(object):
         self.clickedMatrix.clear()
         for i in reversed(range(self.grid.count())):
             self.grid.itemAt(i).widget().setParent(None)
-        self.buttonsGenerator(m, n)
+        self.buttons_generator(m, n)
 
     def error_dialog(self, text):
         self.msg = QMessageBox()
@@ -123,7 +123,7 @@ class Ui_MainWindow(object):
                 return
         return "-1"
 
-    def insertPatternToDB(self):
+    def insert_pattern_to_db(self):
         clean_matrix = utils.matrix_cleaner(self.zero_one_matrix)
         print("insert", clean_matrix)
         if clean_matrix.size == 0:
@@ -136,7 +136,6 @@ class Ui_MainWindow(object):
             elif information_pattern == "-1":
                 return
             dbm.init()
-            # todo: da sostituire il primo parametro dell'insert con il parametro pattern_name del metodo
             if dbm.insert(
                 information_pattern[0],
                 information_pattern[1],
@@ -144,7 +143,7 @@ class Ui_MainWindow(object):
                 utils.generate_serialized_list(clean_matrix),
             ):
                 self.success_dialog("Pattern successfully inserted!")
-                self.clearAll()
+                self.clear_all()
             else:
                 self.error_dialog("Pattern not inserted!")
 
@@ -152,12 +151,15 @@ class Ui_MainWindow(object):
         Dialog = QtWidgets.QDialog()
         ui = risultato_ricerca_dialog()
         ui.setupUi(Dialog)
-        ui.textEdit.setText(result)
+        string_of_results = ""
+        for elem in result:
+            string_of_results += "Name: " + elem[0] + ", tag: " + elem[1] + "\n"
+        ui.textEdit.setText(string_of_results)
         Dialog.show()
         risp = Dialog.exec_()
-        
+
     # todo la ricerca avviene tramite quale tag? cosa gli passiamo?
-    def searchPatternInDB(self):
+    def search_pattern_in_db(self):
         clean_matrix = utils.matrix_cleaner(self.zero_one_matrix)
         if clean_matrix.size == 0:
             self.error_dialog("You must insert a pattern for the search!")
@@ -166,14 +168,14 @@ class Ui_MainWindow(object):
             patternFound = dbm.search_pattern(
                 utils.generate_serialized_list(clean_matrix)
             )
-            if patternFound != None:
-                print(f"Il pattern trovato ha nome = {patternFound}")
-                self.show_search_results( patternFound)
-                self.clearAll()
+            if patternFound:
+                self.show_search_results(patternFound)
+                self.clear_all()
             else:
                 self.error_dialog("Pattern not found")
 
-    def buttonClicked(self, i, j, button):
+    # bottoni della matrice
+    def button_clicked(self, i, j, button):
         if [i, j] in self.clickedMatrix:
             button.setStyleSheet(BOTTONE_MATRICE_STANDARD)
             self.zero_one_matrix[i][j] = 0
@@ -195,7 +197,7 @@ class Ui_MainWindow(object):
         self.msg.setStandardButtons(QMessageBox.Yes | QMessageBox.Cancel)
         self.msg.setDefaultButton(QMessageBox.Yes)
         self.msg.show()
-        self.msg.buttonClicked.connect(self.clearAll)
+        self.msg.buttonClicked.connect(self.clear_all)
 
     def show_error_insert_popup(self):
         self.msg = QMessageBox()
@@ -206,7 +208,7 @@ class Ui_MainWindow(object):
         self.msg.setDefaultButton(QMessageBox.Ok)
         self.msg.show()
 
-    def clearAll(self):
+    def clear_all(self):
         # ? pulizia variabile matrice
         self.clickedMatrix.clear()
         for i in range(len(self.zero_one_matrix)):
@@ -219,7 +221,7 @@ class Ui_MainWindow(object):
             if isinstance(item, QtWidgets.QPushButton):
                 item.setStyleSheet(BOTTONE_MATRICE_STANDARD)
 
-    def buttonsGenerator(self, m, n):
+    def buttons_generator(self, m, n):
         self.zero_one_matrix = [[0 for i in range(n)] for j in range(m)]
         for i in range(m):
             for j in range(n):
@@ -268,7 +270,7 @@ class Ui_MainWindow(object):
 
                 pushButton_4.setObjectName("button_{}".format(str(i) + str(j)))
                 pushButton_4.clicked.connect(
-                    lambda ch, i=i, j=j, button=pushButton_4: self.buttonClicked(
+                    lambda ch, i=i, j=j, button=pushButton_4: self.button_clicked(
                         i, j, button
                     )
                 )
@@ -294,7 +296,7 @@ class Ui_MainWindow(object):
         self.grid.setObjectName("grid")
 
         ##########################
-        self.buttonsGenerator(5, 5)
+        self.buttons_generator(5, 5)
         # ##########################
 
         self.horizontalLayout.addLayout(self.grid)
@@ -358,7 +360,7 @@ class Ui_MainWindow(object):
         )
         self.insertButton.setObjectName("insertButton")
         self.verticalLayout_2.addWidget(self.insertButton)
-        self.insertButton.clicked.connect(self.insertPatternToDB)
+        self.insertButton.clicked.connect(self.insert_pattern_to_db)
 
         #####---Search pattern button---########
         self.searchPatternButton = QtWidgets.QPushButton(self.centralwidget)
@@ -384,7 +386,7 @@ class Ui_MainWindow(object):
         )
         self.searchPatternButton.setObjectName("searchPatternButton")
         self.verticalLayout_2.addWidget(self.searchPatternButton)
-        self.searchPatternButton.clicked.connect(self.searchPatternInDB)
+        self.searchPatternButton.clicked.connect(self.search_pattern_in_db)
 
         #####---Clear button---########
         self.clearButton = QtWidgets.QPushButton(self.centralwidget)
@@ -408,7 +410,7 @@ class Ui_MainWindow(object):
             "    transition: all 0.4s ease 0s;\n"
             "}"
         )
-        self.clearButton.setObjectName("clearAll")
+        self.clearButton.setObjectName("clear_all")
         self.verticalLayout_2.addWidget(self.clearButton)
         self.clearButton.clicked.connect(self.show_clear_matrix_popup)
 
