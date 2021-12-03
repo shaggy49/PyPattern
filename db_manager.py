@@ -50,7 +50,7 @@ def insert(name, tag, pattern, rotations):
     conn = create_connection()
     c = conn.cursor()
     # Insert a row of data
-    if not search_pattern(rotations, tag):
+    if not search_pattern(rotations):
         c.execute("INSERT INTO pattern VALUES (?,?,?)", (name, tag, pattern))
         risultato = 1
         conn.commit()
@@ -81,64 +81,15 @@ def or_generator(rotations):
     return or_string
 
 
-def search_pattern(rotations, tag):
+def search_pattern(rotations):
     conn = sqlite3.connect(DBNAME)
     conn.row_factory = sqlite3.Row
     patternFound = None
     orList = or_generator(rotations)
 
     c = conn.cursor()
-    for row in c.execute(f"SELECT * FROM pattern WHERE (tag='{tag}') AND ({orList})"):
+    for row in c.execute(f"SELECT * FROM pattern WHERE ({orList})"):
         patternFound = row["name"]
     conn.close()
     # print(patternFound)
     return patternFound
-
-
-# a che servono i metodi da qui sotto in poi? #
-
-
-class riga:
-    pass
-
-
-def convert(rs):
-    for val in rs:
-        ret = riga()
-        ret.date = val[0]
-        ret.trans = val[1]
-        ret.symbol = val[2]
-        ret.qty = val[3]
-        ret.price = val[4]
-        yield ret
-
-
-def convertStr(rs, attrnames):
-    # ovviamente occorre mettere tutti gli attributi per allineamento fino
-    # all'indice richiesto
-    # generatore che restituyisce un oggetto di classe riga
-    # con nomi attributi definiti tramite "setattr"
-    for val in rs:
-        ret = riga()
-        for index in range(0, len(attrnames)):
-            setattr(ret, attrnames[index], val[index])
-        yield ret
-
-
-def convertDict(rs, attrs):
-    # generatore che restituyisce un dizionario ,
-    # nome colonna -> valore
-    for val in rs:
-        ret = dict()
-        for anum in attrs.keys():
-            ret[attrs[anum]] = val[anum]
-        yield ret
-
-
-"""
-if True:
-    insert()
-    #search()
-else:
-    clear()
-"""

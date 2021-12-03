@@ -14,6 +14,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
+        #todo validator string
+        self.onlyInt = QtGui.QIntValidator()
+
         Dialog.setObjectName("Dialog")
         Dialog.resize(362, 121)
         self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
@@ -34,9 +37,9 @@ class Ui_Dialog(object):
         self.label_2 = QtWidgets.QLabel(Dialog)
         self.label_2.setGeometry(QtCore.QRect(10, 30, 71, 16))
         self.label_2.setObjectName("label_2")
-        self.colonneNLineEdit = QtWidgets.QLineEdit(Dialog)
-        self.colonneNLineEdit.setGeometry(QtCore.QRect(10, 50, 341, 20))
-        self.colonneNLineEdit.setObjectName("colonneNLineEdit")
+        self.nameLineEdit = QtWidgets.QLineEdit(Dialog)
+        self.nameLineEdit.setGeometry(QtCore.QRect(10, 50, 341, 20))
+        self.nameLineEdit.setObjectName("nameLineEdit")
 
         self.retranslateUi(Dialog)
         self.buttonBox.accepted.connect(Dialog.accept)

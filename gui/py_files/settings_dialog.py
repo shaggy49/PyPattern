@@ -61,13 +61,3 @@ class Ui_Dialog(object):
         self.label_2.setText(_translate("Dialog", "Righe (M)"))
         self.label_3.setText(_translate("Dialog", "Colonne (N)"))
 
-
-if __name__ == "__main__":
-    import sys
-
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())

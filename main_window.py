@@ -15,6 +15,9 @@ from PyQt5.QtWidgets import QMessageBox
 import db_manager as dbm
 import matrix_util as utils
 from gui.py_files.settings_dialog import Ui_Dialog as settings_dialog
+from gui.py_files.salvataggio_matrice_nome_tag import Ui_Dialog as salvataggio_matrice
+from gui.py_files.risultato_ricerca_dialog import Ui_Dialog as risultato_ricerca_dialog
+ 
 
 BOTTONE_MATRICE_STANDARD = (
     "QPushButton {\n"
@@ -79,6 +82,15 @@ class Ui_MainWindow(object):
         self.msg.setDefaultButton(QMessageBox.Ok)
         self.msg.show()
 
+    def success_dialog(self, text):
+        self.msg = QMessageBox()
+        self.msg.setWindowTitle("Success")
+        self.msg.setText(text)
+        self.msg.setIcon(QMessageBox.Information)
+        self.msg.setStandardButtons(QMessageBox.Ok)
+        self.msg.setDefaultButton(QMessageBox.Ok)
+        self.msg.show()
+
     def call_for_settings(self):
         Dialog = QtWidgets.QDialog()
         ui = settings_dialog()
@@ -97,40 +109,69 @@ class Ui_MainWindow(object):
             except:
                 self.error_dialog("M and N must be Integer numbers!")
 
-    def insertPatternToDB(self, pattern_name):
+    def call_for_save_pattern(self):
+        Dialog = QtWidgets.QDialog()
+        ui = salvataggio_matrice()
+        ui.setupUi(Dialog)
+        Dialog.show()
+        risp = Dialog.exec_()
+
+        if risp == QtWidgets.QDialog.Accepted:
+            if ui.nameLineEdit.text().strip() and ui.tagLineEdit.text().strip():
+                return ui.nameLineEdit.text(), ui.tagLineEdit.text()
+            else:
+                return
+        return "-1"
+
+    def insertPatternToDB(self):
         clean_matrix = utils.matrix_cleaner(self.zero_one_matrix)
+        print("insert", clean_matrix)
         if clean_matrix.size == 0:
             self.show_error_insert_popup()
         else:
-            self.clearAll()
+            information_pattern = self.call_for_save_pattern()
+            if not information_pattern:
+                self.error_dialog("Fields must be filled!")
+                return
+            elif information_pattern == "-1":
+                return
             dbm.init()
             # todo: da sostituire il primo parametro dell'insert con il parametro pattern_name del metodo
             if dbm.insert(
-                "pattern_da_GUI",
-                "alphabet",
+                information_pattern[0],
+                information_pattern[1],
                 utils.serialize_matrix(clean_matrix),
                 utils.generate_serialized_list(clean_matrix),
             ):
-                print("Tupla inserita con successo")
+                self.success_dialog("Pattern successfully inserted!")
+                self.clearAll()
             else:
-                print("Tupla non inserita")
+                self.error_dialog("Pattern not inserted!")
 
-    # todo capire se tenere il clearAll()
+    def show_search_results(self, result):
+        Dialog = QtWidgets.QDialog()
+        ui = risultato_ricerca_dialog()
+        ui.setupUi(Dialog)
+        ui.textEdit.setText(result)
+        Dialog.show()
+        risp = Dialog.exec_()
+        
+    # todo la ricerca avviene tramite quale tag? cosa gli passiamo?
     def searchPatternInDB(self):
         clean_matrix = utils.matrix_cleaner(self.zero_one_matrix)
         if clean_matrix.size == 0:
-            self.show_error_search_popup()
+            self.error_dialog("You must insert a pattern for the search!")
         else:
-            self.clearAll()
             dbm.init()
             patternFound = dbm.search_pattern(
-                utils.generate_serialized_list(clean_matrix), "alphabet"
+                utils.generate_serialized_list(clean_matrix)
             )
             if patternFound != None:
                 print(f"Il pattern trovato ha nome = {patternFound}")
+                self.show_search_results( patternFound)
+                self.clearAll()
             else:
-                print("Il pattern digitato non è stato trovato!")
-            self.show_error_search_popup()
+                self.error_dialog("Pattern not found")
 
     def buttonClicked(self, i, j, button):
         if [i, j] in self.clickedMatrix:
@@ -155,15 +196,6 @@ class Ui_MainWindow(object):
         self.msg.setDefaultButton(QMessageBox.Yes)
         self.msg.show()
         self.msg.buttonClicked.connect(self.clearAll)
-
-    def show_error_search_popup(self):
-        self.msg = QMessageBox()
-        self.msg.setWindowTitle("Search error")
-        self.msg.setText("You must insert a pattern for the search")
-        self.msg.setIcon(QMessageBox.Critical)
-        self.msg.setStandardButtons(QMessageBox.Ok)
-        self.msg.setDefaultButton(QMessageBox.Ok)
-        self.msg.show()
 
     def show_error_insert_popup(self):
         self.msg = QMessageBox()
@@ -254,28 +286,27 @@ class Ui_MainWindow(object):
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_2.setContentsMargins(15, 20, 15, -1)
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.grid = QtWidgets.QGridLayout()
+        self.grid.setContentsMargins(15, -1, -1, -1)
+        self.grid.setSpacing(0)
+        self.grid.setObjectName("grid")
 
-        #####---Pattern-name edit text---######à##
-        self.patternNameLineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.patternNameLineEdit.setObjectName("patternNameLineEdit")
-        self.patternNameLineEdit.setStatusTip("")
-        self.patternNameLineEdit.setWhatsThis("")
-        self.patternNameLineEdit.setStyleSheet(
-            "QLineEdit{\n"
-            "    color: #494949 !important;\n"
-            "    text-decoration: none;\n"
-            "    background: #ffffff;\n"
-            "    margin-bottom:5px;\n"
-            "    padding: 0.2em;\n"
-            "    border: 4px solid #494949 !important;\n"
-            "}"
+        ##########################
+        self.buttonsGenerator(5, 5)
+        # ##########################
+
+        self.horizontalLayout.addLayout(self.grid)
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_2.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
+        self.verticalLayout_2.setContentsMargins(15, -1, 15, -1)
+        self.verticalLayout_2.setSpacing(0)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        spacerItem = QtWidgets.QSpacerItem(
+            20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding
         )
-        self.patternNameLineEdit.setInputMask("")
-        self.patternNameLineEdit.setText("")
-        self.horizontalLayout_2.addWidget(self.patternNameLineEdit)
+        self.verticalLayout_2.addItem(spacerItem)
 
         #####---Settings button ---########
         self.settingsButton = QtWidgets.QPushButton(self.centralwidget)
@@ -300,31 +331,8 @@ class Ui_MainWindow(object):
             "}"
         )
         self.settingsButton.setObjectName("settingsButton")
-        self.horizontalLayout_2.addWidget(self.settingsButton)
+        self.verticalLayout_2.addWidget(self.settingsButton)
         self.settingsButton.clicked.connect(self.call_for_settings)
-
-        self.verticalLayout.addLayout(self.horizontalLayout_2)
-        self.horizontalLayout = QtWidgets.QHBoxLayout()
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.grid = QtWidgets.QGridLayout()
-        self.grid.setContentsMargins(15, -1, -1, -1)
-        self.grid.setSpacing(0)
-        self.grid.setObjectName("grid")
-
-        ##########################
-        self.buttonsGenerator(5, 5)
-        # ##########################
-
-        self.horizontalLayout.addLayout(self.grid)
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_2.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
-        self.verticalLayout_2.setContentsMargins(15, -1, 15, -1)
-        self.verticalLayout_2.setSpacing(0)
-        self.verticalLayout_2.setObjectName("verticalLayout_2")
-        spacerItem = QtWidgets.QSpacerItem(
-            20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding
-        )
-        self.verticalLayout_2.addItem(spacerItem)
 
         #####---Insert button ---########
         self.insertButton = QtWidgets.QPushButton(self.centralwidget)
@@ -378,31 +386,6 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.searchPatternButton)
         self.searchPatternButton.clicked.connect(self.searchPatternInDB)
 
-        #####---Search size button---########
-        self.searchSizeButton = QtWidgets.QPushButton(self.centralwidget)
-        self.searchSizeButton.setStyleSheet(
-            "QPushButton {\n"
-            "    color: #494949 !important;\n"
-            "    text-transform: uppercase;\n"
-            "    text-decoration: none;\n"
-            "    background: #ffffff;\n"
-            "    margin-bottom:5px;\n"
-            "    padding: 0.2em;\n"
-            "    border: 4px solid #494949 !important;\n"
-            "    transition: all 0.4s ease 0s;\n"
-            "    border-radius:5px;\n"
-            "}\n"
-            "\n"
-            "QPushButton:pressed {\n"
-            "    color: #ffffff !important;\n"
-            "    background: #f6b93b;\n"
-            "    border-color: #f6b93b !important;\n"
-            "    transition: all 0.4s ease 0s;\n"
-            "}"
-        )
-        self.searchSizeButton.setObjectName("searchSizeButton")
-        self.verticalLayout_2.addWidget(self.searchSizeButton)
-
         #####---Clear button---########
         self.clearButton = QtWidgets.QPushButton(self.centralwidget)
         self.clearButton.setStyleSheet(
@@ -453,16 +436,9 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "App"))
-        self.patternNameLineEdit.setToolTip(
-            _translate("MainWindow", "Pattern name to look for/save")
-        )
-        self.patternNameLineEdit.setPlaceholderText(
-            _translate("MainWindow", "Pattern name")
-        )
         self.settingsButton.setText(_translate("MainWindow", "Settings"))
         self.insertButton.setText(_translate("MainWindow", "Insert"))
         self.searchPatternButton.setText(_translate("MainWindow", "Search pattern"))
-        self.searchSizeButton.setText(_translate("MainWindow", "Search size"))
         self.clearButton.setText(_translate("MainWindow", "Clear"))
 
 
