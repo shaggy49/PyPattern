@@ -99,25 +99,38 @@ class Ui_MainWindow(object):
 
     def insertPatternToDB(self, pattern_name):
         clean_matrix = utils.matrix_cleaner(self.zero_one_matrix)
-        self.clearAll()
-        dbm.init()
-        # todo: da sostituire il primo parametro dell'insert con il parametro pattern_name del metodo
-        if dbm.insert('pattern_da_GUI', 'alphabet', utils.serialize_matrix(clean_matrix),
-                      utils.generate_serialized_list(clean_matrix)):
-            print("Tupla inserita con successo")
+        if clean_matrix.size == 0:
+            self.show_error_insert_popup()
         else:
-            print("Tupla non inserita")
+            self.clearAll()
+            dbm.init()
+            # todo: da sostituire il primo parametro dell'insert con il parametro pattern_name del metodo
+            if dbm.insert(
+                "pattern_da_GUI",
+                "alphabet",
+                utils.serialize_matrix(clean_matrix),
+                utils.generate_serialized_list(clean_matrix),
+            ):
+                print("Tupla inserita con successo")
+            else:
+                print("Tupla non inserita")
 
-
+    # todo capire se tenere il clearAll()
     def searchPatternInDB(self):
         clean_matrix = utils.matrix_cleaner(self.zero_one_matrix)
-        self.clearAll()
-        dbm.init()
-        patternFound = dbm.search_pattern(utils.generate_serialized_list(clean_matrix), 'alphabet')
-        if(patternFound != None):
-            print(f"Il pattern trovato ha nome = {patternFound}")
+        if clean_matrix.size == 0:
+            self.show_error_search_popup()
         else:
-            print("Il pattern digitato non è stato trovato!")
+            self.clearAll()
+            dbm.init()
+            patternFound = dbm.search_pattern(
+                utils.generate_serialized_list(clean_matrix), "alphabet"
+            )
+            if patternFound != None:
+                print(f"Il pattern trovato ha nome = {patternFound}")
+            else:
+                print("Il pattern digitato non è stato trovato!")
+            self.show_error_search_popup()
 
     def buttonClicked(self, i, j, button):
         if [i, j] in self.clickedMatrix:
@@ -142,6 +155,24 @@ class Ui_MainWindow(object):
         self.msg.setDefaultButton(QMessageBox.Yes)
         self.msg.show()
         self.msg.buttonClicked.connect(self.clearAll)
+
+    def show_error_search_popup(self):
+        self.msg = QMessageBox()
+        self.msg.setWindowTitle("Search error")
+        self.msg.setText("You must insert a pattern for the search")
+        self.msg.setIcon(QMessageBox.Critical)
+        self.msg.setStandardButtons(QMessageBox.Ok)
+        self.msg.setDefaultButton(QMessageBox.Ok)
+        self.msg.show()
+
+    def show_error_insert_popup(self):
+        self.msg = QMessageBox()
+        self.msg.setWindowTitle("Insert error")
+        self.msg.setText("You must insert a pattern")
+        self.msg.setIcon(QMessageBox.Critical)
+        self.msg.setStandardButtons(QMessageBox.Ok)
+        self.msg.setDefaultButton(QMessageBox.Ok)
+        self.msg.show()
 
     def clearAll(self):
         # ? pulizia variabile matrice

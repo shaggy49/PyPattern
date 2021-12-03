@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def matrix_printer(matr):
     for i in range(len(matr)):
         for j in range(len(matr[i])):
@@ -7,8 +8,10 @@ def matrix_printer(matr):
         print(end="\n")
     print("\n")
 
+
 def get_column(matr, i):
     return [row[i] for row in matr]
+
 
 def rotate_by_90(matr):
     new_matrix = []
@@ -22,6 +25,7 @@ def rotate_by_90(matr):
         else:
             new_matrix.append(column)
     return new_matrix
+
 
 def vertical_cleaner(matrice):
     new_matrix = matrice
@@ -63,6 +67,7 @@ def vertical_cleaner(matrice):
     new_matrix = np.delete(matrice, total_to_be_deleted, 1)
     return new_matrix
 
+
 def horizontal_cleaner(matrice):
     new_matrix = matrice
     # array righe da eliminare prima e dopo aver trovato un pattern
@@ -101,16 +106,19 @@ def matrix_cleaner(matrice):
     horizontalCleanMatrix = horizontal_cleaner(matrice)
     return vertical_cleaner(horizontalCleanMatrix)
 
+
 # def delete_row(matr, obj):
 #     matr = np.delete(matr, (0, 1), 1)
 #     print(matr)
 
+
 def serialize_matrix(matr):
-    serialized = ''
+    serialized = ""
     for row in matr:
         for element in row:
-            serialized = serialized+str(element)
+            serialized = serialized + str(element)
     return serialized
+
 
 """def generate_rotations_short(matr):
     return [rotate_by_90(matr) for i in range(4)]"""
@@ -123,6 +131,7 @@ def serialize_matrix(matr):
 
 # def generate_or_list(matr):
 #     return [serialize_matrix(matr = rotate_by_90(matr)) for i in range(4)]
+
 
 def generate_serialized_list(matr):
     mat = matr

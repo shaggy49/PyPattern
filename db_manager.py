@@ -1,13 +1,13 @@
 import sqlite3
 from sqlite3 import Error
 
-DBNAME = 'pattern.db'
+DBNAME = "pattern.db"
 
-'''
+"""
 aiuto: sqlite3, connect,cursor,execute,executemany, commit,close
 
 classe vuota, tupla,dizionario, setattr()
-'''
+"""
 
 
 # conn = sqlite3.connect(DBNAME)
@@ -30,10 +30,12 @@ def init():
     c = conn.cursor()
 
     # Create table
-    c.execute('''CREATE TABLE  if not exists pattern
+    c.execute(
+        """CREATE TABLE  if not exists pattern
                  (  name TEXT, 
                     tag TEXT,
-                    matrix TEXT)''')
+                    matrix TEXT)"""
+    )
     conn.commit()
 
 
@@ -61,7 +63,7 @@ def clear():
     c = conn.cursor()
 
     # Drop table
-    c.execute('''DROP TABLE pattern''')
+    c.execute("""DROP TABLE pattern""")
 
     # Save (commit) the changes
     conn.commit()
@@ -70,11 +72,11 @@ def clear():
 
 # valutare se spostare in un altro file
 def or_generator(rotations):
-    or_string = ''
+    or_string = ""
     for i in range(len(rotations)):
         or_string += "matrix = '" + rotations[i] + "'"
         # mette gli or fino al penultimo elemento/ciclo
-        if (i < len(rotations) - 1):
+        if i < len(rotations) - 1:
             or_string += " OR "
     return or_string
 
@@ -86,7 +88,7 @@ def search_pattern(rotations, tag):
     orList = or_generator(rotations)
 
     c = conn.cursor()
-    for row in c.execute(f'SELECT * FROM pattern WHERE (tag=\'{tag}\') AND ({orList})'):
+    for row in c.execute(f"SELECT * FROM pattern WHERE (tag='{tag}') AND ({orList})"):
         patternFound = row["name"]
     conn.close()
     # print(patternFound)
@@ -95,7 +97,8 @@ def search_pattern(rotations, tag):
 
 # a che servono i metodi da qui sotto in poi? #
 
-class riga():
+
+class riga:
     pass
 
 
