@@ -1,4 +1,4 @@
-# Progetto Python
+# PyPattern
 
 ## Info
 
