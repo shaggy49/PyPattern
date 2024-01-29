@@ -1,20 +1,28 @@
 # PyPattern
+Progetto universitario attraverso cui e' possibile inserire pattern in una matrice quadrata e poi cercarli.
 
-## Info
 
-Script test rotazione e pulizia di una matrice per il riconoscimento di pattern su un matrice MxN.
+## Esecuzione
+Per permettere la corretta esecuzione del progetto bisogna installare i seguenti package: PyQt5, numpy.
 
-Il progetto utilizza anche una GUI sviluppata mediante PyQt.
+Una volta scaricate le dipendenze mandare in run lo script `main_window.py`.
+
+## Schermate
+![Letter](pic/pypattern_letter.png?raw=true "Letter")
+![Save](pic/pypattern_save.png?raw=true "Save")
+![Show](pic/pypattern_show.png?raw=true "Show")
 
 ## Consegna
+Immaginiamo di avere una matrice MxN di bit. Le singole caselle possono contenere i valori 0 e 1 e
+questi valori formano dei pattern.
+Fare un programma che cerchi la presenza di specifici pattern all’interno della matrice, ad esempio delle lettere dell’alfabeto.
 
-Immaginiamo di avere una matrice MxN, di Bit.Le singole caselle possono contenere i valori 0 e 1
-questi valori formano dei pattern
-fare un programma che cerchi la presenza di specifici pattern all’interno della matrice, ad esempio delle lettere dell’alfabeto.
-i pattern possono essere ruotati di 90, 180, 270 gradi
-i pattern sono specificabili in formato a scelta dello studente.
+I pattern:
+* possono essere ruotati di 90, 180, 270 gradi; 
+* sono specificabili in formato a scelta dello studente.
+
 L’ algoritmo  deve essere implementato dal codice dello studente.
-Non e’ consentito usare librerie esterne per i pattern
+Non e’ consentito usare librerie esterne per la gestione dei pattern.
 
 **Se il progetto è svolto in gruppo**:
 il programma avra’ una GUI per inserire il pattern da cercare e visualizzare i pattern trovati 
